@@ -1,0 +1,28 @@
+@body: #c0c0c0;
+@header: #640E27;
+@content: #a5a5a5;
+
+html, body {
+    margin: 0;
+    padding: 0;
+}
+body {
+    background: @body;
+}
+
+#header {
+    background: @header url(/img/logo-long.png) no-repeat center;
+    height: 269px;
+    margin: auto;
+}
+
+#content {
+    height: auto;
+    margin: 1em auto 80px auto;
+    padding: .5em;
+    background: @content;
+    border-bottom: 1px solid #777;
+    border-top: 1px solid #777;
+    overflow: hidden;
+    width: 900px;
+}

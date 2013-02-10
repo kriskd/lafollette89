@@ -32,4 +32,15 @@ App::uses('Controller', 'Controller');
  * @link http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
  */
 class AppController extends Controller {
+    public function beforeRender()
+    {
+        if(Configure::read('debug') > 0){
+            App::import('Vendor', 'lessc');
+            $lessc = new lessc();
+            $less = getcwd() . DS . 'less' . DS . 'styles.less'; 
+            $css = getcwd() . DS . 'css' . DS . 'styles.css'; 
+            $lessc->checkedCompile($less,$css);
+        }
+        parent::beforeRender();
+    }
 }

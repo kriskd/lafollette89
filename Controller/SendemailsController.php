@@ -14,24 +14,13 @@ class SendEmailsController extends AppController
     }
     
     /**
-     * Compose the email
-     */
-    public function index()
-    {
-        $ids = $this->Session->read('ids');
-        if(empty($ids)){
-            $this->redirect('/classmates');
-        }
-        $this->Session->delete('ids'); 
-        $this->set(compact('ids'));
-    }
-    
-    /**
      * All data for sending emails
      */
     public function send()
     {
-        if(!empty($this->request->data)){
+        $referer = $this->referer(null, true);
+        $route = Router::url(array('controller' => 'classmates', 'action' => 'compose'));
+        if(!empty($this->request->data) && strcasecmp($referer, $route)==0){
             $from_email = Configure::read('email'); 
             $email = new CakeEmail(); 
             $email->config('smtp');
@@ -45,9 +34,9 @@ class SendEmailsController extends AppController
                 
                 $send_to = array_shift($recipient); 
                 //Emails will be written to db to send via cron job
-                $email->to($send_to)
+                /*$email->to($send_to)
                         ->subject('About')
-                        ->send('My message');
+                        ->send('My message');*/
                 }
         }
         

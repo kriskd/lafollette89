@@ -15,7 +15,17 @@ class ClassmatesController extends AppController
                 $ids[] = $id;
             }
             $this->Session->write(compact('ids'));
-            $this->redirect('/sendemails');
+            $this->redirect(array('action' => 'compose'));
         }
+    }
+    
+    public function compose()
+    {
+        $ids = $this->Session->read('ids');
+        if(empty($ids)){
+            $this->redirect(array('action' => 'index'));
+        }
+        $this->Session->delete('ids'); 
+        $this->set(compact('ids'));
     }
 }

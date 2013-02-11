@@ -21,3 +21,9 @@ body {
   overflow: hidden;
   width: 900px;
 }
+.col1,
+.col2,
+.col3 {
+  width: 33%;
+  float: left;
+}

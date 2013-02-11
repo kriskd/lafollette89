@@ -9,7 +9,14 @@ class ClassmatesController extends AppController
     public function index()
     {
         $classmates = $this->Classmate->find('all', array('order' => array('formerLastName', 'firstName')));
-        $this->set(compact('classmates'));
+        $count = count($classmates);
+        $chunk = array_chunk($classmates, ceil($count/3));
+        
+        $col1 = current($chunk);
+        $col2 = next($chunk);
+        $col3 = next($chunk);
+        
+        $this->set(compact('col1', 'col2', 'col3'));
         
         if(!empty($this->request->data)){
             $recipients = array_shift($this->request->data);

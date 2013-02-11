@@ -3,6 +3,9 @@ App::uses('AppController', 'Controller');
 
 class ClassmatesController extends AppController
 {
+    /**
+     * Display a list of classmates to send emails to.
+     */
     public function index()
     {
         $classmates = $this->Classmate->find('all', array('order' => array('formerLastName', 'firstName')));
@@ -19,6 +22,9 @@ class ClassmatesController extends AppController
         }
     }
     
+    /**
+     * After selecting classmates to send email to, compose the email
+     */
     public function compose()
     {
         $ids = $this->Session->read('ids');

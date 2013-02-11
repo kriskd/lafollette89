@@ -4,7 +4,7 @@ App::uses('AppModel', 'Model');
  * Sendemail Model
  *
  */
-class Sendemail extends AppModel {
+class SendEmail extends AppModel {
 
 /**
  * Use database config
@@ -37,7 +37,7 @@ class Sendemail extends AppModel {
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
-		'recipient' => array(
+		'to_email' => array(
 			'email' => array(
 				'rule' => array('email'),
 				//'message' => 'Your custom message here',
@@ -75,7 +75,25 @@ class Sendemail extends AppModel {
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
-		'header' => array(
+		'from_email' => array(
+			'email' => array(
+				'rule' => array('email'),
+				//'message' => 'Your custom message here',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+			'notempty' => array(
+				'rule' => array('notempty'),
+				//'message' => 'Your custom message here',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+		),
+                'from_name' => array(
 			'notempty' => array(
 				'rule' => array('notempty'),
 				//'message' => 'Your custom message here',

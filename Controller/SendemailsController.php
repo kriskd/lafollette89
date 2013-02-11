@@ -1,44 +1,31 @@
 <?php
 App::uses('AppController', 'Controller');
-App::uses('CakeEmail', 'Network/Email');
-App::uses('PhpReader', 'Configure');
 
 class SendEmailsController extends AppController
 {
-    public $uses = array('Classmate');
-    
-    public function beforeFilter()
-    {
-        Configure::config('default', new PhpReader());
-        Configure::load('my_configs', 'default');
-    }
+    public $uses = array('Classmate', 'SendEmail');
     
     /**
-     * All data for sending emails
+     * Write emails to send to database
      */
-    public function send()
+    public function index()
     {
         $referer = $this->referer(null, true);
         $route = Router::url(array('controller' => 'classmates', 'action' => 'compose'));
         if(!empty($this->request->data) && strcasecmp($referer, $route)==0){
-            $from_email = Configure::read('email'); 
-            $email = new CakeEmail(); 
-            $email->config('smtp');
-            $email->from(array($from_email => 'La Follette 89')); 
-        
-            $data = $this->request->data;
+            $data = $this->request->data; 
+            $sendemail = array('SendEmail' => $data['Sendemail']); 
             $recipients = $data['Classmate'];
             foreach($recipients as $id){
                 $recipient = $this->Classmate->find('list', array('conditions' => array('id' => $id),
                                                                    'fields' => array('email')));
                 
-                $send_to = array_shift($recipient); 
-                //Emails will be written to db to send via cron job
-                /*$email->to($send_to)
-                        ->subject('About')
-                        ->send('My message');*/
-                }
+                $to_email = array_shift($recipient);
+                $sendemail['SendEmail']['to_email'] = $to_email;
+                $this->SendEmail->create();
+                $this->SendEmail->save($sendemail);
+            }
         }
-        
     }
+
 }

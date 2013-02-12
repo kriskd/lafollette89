@@ -1,8 +1,10 @@
 <?php
 App::uses('AppController', 'Controller');
+App::uses('CaptchaComponent', 'Controller/Component');
 
 class ClassmatesController extends AppController
 {
+    public $components = array('Captcha');
     /**
      * Display a list of classmates to send emails to.
      */
@@ -34,11 +36,12 @@ class ClassmatesController extends AppController
      */
     public function compose()
     {
+        $captcha_img = $this->Captcha->makeCaptcha();
         $ids = $this->Session->read('ids');
         if(empty($ids)){
             $this->redirect(array('action' => 'index'));
         }
         $this->Session->delete('ids'); 
-        $this->set(compact('ids'));
+        $this->set(compact('ids', 'captcha_img'));
     }
 }

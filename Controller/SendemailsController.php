@@ -6,6 +6,7 @@ class SendEmailsController extends AppController
     public $uses = array('Classmate', 'SendEmail');
     
     public $components = array('Captcha');
+    public $helpers = array('Session');
     
     /**
      * Write emails to send to database
@@ -29,6 +30,7 @@ class SendEmailsController extends AppController
                     $this->SendEmail->create();
                     $this->SendEmail->save($sendemail);
                 }
+                $this->Session->setFlash('Your email will be sent.');
             }
         }
     }

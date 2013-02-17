@@ -32,6 +32,15 @@ class ClassmatesController extends AppController
     }
     
     /**
+     * Add classmate email
+     */
+    public function add()
+    {
+        $captcha_img = $this->Captcha->makeCaptcha();
+        $this->set(compact('captcha_img'));
+    }
+    
+    /**
      * After selecting classmates to send email to, compose the email
      */
     public function compose()

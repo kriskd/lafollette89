@@ -12,6 +12,14 @@ label {
   display: block;
   margin-top: 1em; 
 }
+.checkbox {
+  line-height: 1.4;
+}
+.checkbox label {
+  font-weight: normal;
+  display: inline;
+  margin-top: auto;
+}
 #header {
   background: #640E27 url(/img/logo-long.png) no-repeat center;
   height: 269px;

@@ -5,6 +5,12 @@ body {
 }
 body {
   background: #c0c0c0;
+  font: 75% Arial,Helvetica,sans-serif;
+}
+label {
+  font-weight: bold;
+  display: block;
+  margin-top: 1em; 
 }
 #header {
   background: #640E27 url(/img/logo-long.png) no-repeat center;

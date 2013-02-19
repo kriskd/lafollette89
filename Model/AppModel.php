@@ -30,5 +30,13 @@ App::uses('Model', 'Model');
  *
  * @package       app.Model
  */
-class AppModel extends Model {
+class AppModel extends Model
+{
+    public function beforeValidate($options = array())
+    {
+        $this->validator()->add('captcha', array(
+            'rule' => 'notEmpty',
+            'message' => 'Enter the color of the box.'
+        ));
+    }
 }

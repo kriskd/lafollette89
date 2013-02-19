@@ -5,6 +5,7 @@ App::uses('CaptchaComponent', 'Controller/Component');
 class ClassmatesController extends AppController
 {
     public $components = array('Captcha');
+
     /**
      * Display a list of classmates to send emails to.
      */
@@ -36,6 +37,15 @@ class ClassmatesController extends AppController
      */
     public function add()
     {
+        if($this->request->is('post') || $this->request->is('put')){
+            $this->Classmate->create();
+            if($this->Classmate->save($this->request->data)){
+                $this->Session->setFlash('Saved');
+            }
+            else{
+                $this->Session->setFlash('Not saved');
+            }
+        }
         $captcha_img = $this->Captcha->makeCaptcha();
         $this->set(compact('captcha_img'));
     }

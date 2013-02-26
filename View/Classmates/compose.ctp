@@ -1,4 +1,4 @@
-<?php echo $this->Form->create('Sendemail', array('type' => 'post', 'url' => '/sendemails')); ?>
+<?php echo $this->Form->create('SendEmail', array('type' => 'post')); ?>
 <?php foreach($ids as $id): ?>
     <?php echo $this->Form->hidden('Classmate.' . $id, array('value' => $id, 'id' => null)); ?>
 <?php endforeach; ?>

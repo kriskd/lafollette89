@@ -16,7 +16,6 @@ class ClassmatesController extends AppController
      */
     public function index()
     {
-        $this->Session->delete('ids');
         $classmates = $this->Classmate->find('all', array('order' => array('formerLastName', 'firstName')));
         $count = count($classmates);
         $chunk = array_chunk($classmates, ceil($count/3));
@@ -82,6 +81,7 @@ class ClassmatesController extends AppController
                         $savemany[] = $sendemail; 
                     }
                     $this->SendEmail->saveMany($savemany, array('validate' => false));
+                    $this->Session->delete('ids');
                     $this->Session->setFlash('Your email will be sent.');
                 }
             }

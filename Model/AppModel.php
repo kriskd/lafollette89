@@ -21,6 +21,7 @@
  */
 
 App::uses('Model', 'Model');
+App::uses('CaptchaComponent', 'Controller/Component');
 
 /**
  * Application model for Cake.
@@ -35,8 +36,21 @@ class AppModel extends Model
     public function beforeValidate($options = array())
     {
         $this->validator()->add('captcha', array(
-            'rule' => 'notEmpty',
-            'message' => 'Enter the color of the box.'
-        ));
+                'rule1' => array(
+                    'rule' => 'notEmpty',
+                    'message' => 'Enter the color of the box.'
+                ),
+                'rule2' => array(
+                    'rule' => array('validCaptcha'),
+                    'message' => 'Captcha does not match'
+                )
+            )
+        );
+    }
+    
+    public function validCaptcha($check)
+    {
+        $Captcha = new CaptchaComponent(new ComponentCollection());
+        return $Captcha->checkCaptcha($check['captcha']);
     }
 }

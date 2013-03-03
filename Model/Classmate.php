@@ -89,11 +89,15 @@ class Classmate extends AppModel {
                             //'last' => false, // Stop validation after this rule
                             //'on' => 'create', // Limit validation to 'create' or 'update' operations
                     ),
+                    'unique' => array(
+                            'rule' => 'isUnique',
+                            'message' => 'This email is already registered.'
+                    ),
             ),
             'legitComments' => array(
                     'minlength' => array(
                             'rule' => array('minlength', 10),
-                            'message' => 'Your custom message here',
+                            'message' => 'I think you should tell me a little more.',
                             //'allowEmpty' => false,
                             //'required' => false,
                             //'last' => false, // Stop validation after this rule
@@ -101,7 +105,7 @@ class Classmate extends AppModel {
                     ),
                     'notempty' => array(
                             'rule' => array('notempty'),
-                            'message' => 'Your custom message here',
+                            'message' => 'Please complete this field.',
                             //'allowEmpty' => false,
                             //'required' => false,
                             //'last' => false, // Stop validation after this rule

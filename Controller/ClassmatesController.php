@@ -43,6 +43,8 @@ class ClassmatesController extends AppController
     public function add()
     {
         if($this->request->is('post') || $this->request->is('put')){
+            $data = $this->request->data; 
+            $captcha = $data['Classmate']['captcha'];
             $this->Classmate->create();
             if($this->Classmate->save($this->request->data)){
                 $this->Session->setFlash('Saved');
@@ -69,21 +71,19 @@ class ClassmatesController extends AppController
             if($this->SendEmail->validates()){ 
                 $captcha = $data['SendEmail']['captcha']; 
                 $sendemail = array('SendEmail' => $data['SendEmail']);
-                if($this->Captcha->checkCaptcha($captcha)==true){ 
-                    $recipients = $data['Classmate'];
-                    foreach($recipients as $id){
-                        $recipient = $this->Classmate->find('list', array('conditions' => array('id' => $id),
-                                                                           'fields' => array('email')));
-                        
-                        $to_email = array_shift($recipient);
-                        $sendemail['SendEmail']['to_email'] = $to_email;
-                        unset($sendemail['SendEmail']['captcha']);
-                        $savemany[] = $sendemail; 
-                    }
-                    $this->SendEmail->saveMany($savemany, array('validate' => false));
-                    $this->Session->delete('ids');
-                    $this->Session->setFlash('Your email will be sent.');
+                $recipients = $data['Classmate'];
+                foreach($recipients as $id){
+                    $recipient = $this->Classmate->find('list', array('conditions' => array('id' => $id),
+                                                                       'fields' => array('email')));
+                    
+                    $to_email = array_shift($recipient);
+                    $sendemail['SendEmail']['to_email'] = $to_email;
+                    unset($sendemail['SendEmail']['captcha']);
+                    $savemany[] = $sendemail; 
                 }
+                $this->SendEmail->saveMany($savemany, array('validate' => false));
+                $this->Session->delete('ids');
+                $this->Session->setFlash('Your email will be sent.');
             }
         }
 

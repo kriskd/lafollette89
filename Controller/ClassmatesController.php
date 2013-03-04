@@ -5,11 +5,6 @@ App::uses('CaptchaComponent', 'Controller/Component');
 class ClassmatesController extends AppController
 {
     public $components = array('Captcha');
-
-    public function beforeFilter()
-    {
-        
-    }
     
     /**
      * Display a list of classmates to send emails to.
@@ -36,27 +31,7 @@ class ClassmatesController extends AppController
             $this->redirect(array('action' => 'compose'));
         }
     }
-    
-    /**
-     * Add classmate email
-     */
-    public function add()
-    {
-        if($this->request->is('post') || $this->request->is('put')){
-            $data = $this->request->data; 
-            $captcha = $data['Classmate']['captcha'];
-            $this->Classmate->create();
-            if($this->Classmate->save($this->request->data)){
-                $this->Session->setFlash('Saved');
-            }
-            else{
-                $this->Session->setFlash('Not saved');
-            }
-        }
-        $captcha_img = $this->Captcha->makeCaptcha();
-        $this->set(compact('captcha_img'));
-    }
-    
+       
     /**
      * After selecting classmates to send email to, compose the email
      */
@@ -95,5 +70,73 @@ class ClassmatesController extends AppController
         }
         
         $this->set(compact('ids', 'captcha_img'));
+    }
+    
+    /**
+     * Add classmate email
+     */
+    public function add()
+    {
+        if($this->request->is('post') || $this->request->is('put')){
+            $data = $this->request->data; 
+            $captcha = $data['Classmate']['captcha'];
+            $this->Classmate->create();
+            if($this->Classmate->save($this->request->data)){
+                $this->Session->setFlash('Saved');
+            }
+            else{
+                $this->Session->setFlash('Not saved');
+            }
+        }
+        $captcha_img = $this->Captcha->makeCaptcha();
+        $this->set(compact('captcha_img'));
+    }
+     
+    /**
+     * Get the user object for the user email
+     */
+    public function email()
+    {   
+        if($this->request->is('post') || $this->request->is('put')){
+            $data = $this->request->data;
+            $email = $data['Classmate']['email']; 
+            if($classmate = $this->Classmate->find('first', array('conditions' => array(
+                                                            'email' => $email,
+                                                        )))){
+                if($classmate['Classmate']['login'] == null){  
+                    $this->Session->write(compact('classmate'));
+                    $this->redirect(array('action' => 'create'));
+                }
+                else{
+                    $this->Session->SetFlash('This email already has an account associated with it.');
+                    //redirect to login
+                }
+            }
+            else{
+                $this->Session->setFlash('This email is not registered with the site.');
+            }
+        }
+    }
+    
+    /**
+     * Create a full user
+     */
+    public function create()
+    {
+        $classmate = $this->Session->read('classmate'); 
+        if(isset($classmate)){
+            if($this->request->is('post') || $this->request->is('put')){
+                $data = $this->request->data;
+                $this->Classmate->addPwValidator();
+                $this->Classmate->set($data);
+                if($this->Classmate->validates()){
+                    //Update user
+                }
+                //Redirect to user's control panel
+            }
+        }
+        else{
+            $this->redirect(array('action' => 'email'));
+        }
     }
 }

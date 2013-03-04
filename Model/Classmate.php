@@ -51,7 +51,7 @@ class Classmate extends AppModel {
                             'rule' => array('custom', '/^[a-zA-Z-]*$/'),
                             'message' => 'Enter a valid last name.',
                             'allowEmpty' => false,
-                            'required' => true,
+                            //'required' => true,
                             //'last' => false, // Stop validation after this rule
                             //'on' => 'create', // Limit validation to 'create' or 'update' operations
                     ),
@@ -77,7 +77,7 @@ class Classmate extends AppModel {
                             'rule' => array('email'),
                             'message' => 'This must be a valid email.',
                             'allowEmpty' => false,
-                            'required' => true,
+                            //'required' => true,
                             //'last' => false, // Stop validation after this rule
                             //'on' => 'create', // Limit validation to 'create' or 'update' operations
                     ),
@@ -161,6 +161,9 @@ class Classmate extends AppModel {
                             //'last' => false, // Stop validation after this rule
                             //'on' => 'create', // Limit validation to 'create' or 'update' operations
                     ),
+                    'notempty' => array(
+                            'rule' => array('notEmpty'),
+                    ),
             ),
             'role' => array(
                     'numeric' => array(
@@ -181,5 +184,33 @@ class Classmate extends AppModel {
                     ),
             ),
     );
-        
+    
+    public function addPwValidator()
+    {
+        $this->validator()
+            ->add('password', array(
+                    'match' => array(
+                        'rule' => array('pwMatch'),
+                        'message' => 'Passwords do not match.'
+                    ),  
+                )
+            )
+            ->add('password2', array(
+                'notEmpty' => array(
+                    'rule' => 'notEmpty',
+                    'message' => 'Please confirm your password.'
+                ),
+                /*'match' => array(
+                    'rule' => array('pwMatch'),
+                    'message' => 'Passwords do not match.'
+                ),*/
+            )
+        );
+    }
+    
+    public function pwMatch($check)
+    {   
+        $password2 = $this->data['Classmate']['password2']; //var_dump($password == $check['password2']);
+        return $password2 == $check['password'] ? true : false;
+    }
 }

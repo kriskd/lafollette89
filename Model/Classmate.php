@@ -151,6 +151,18 @@ class Classmate extends AppModel {
                             //'last' => false, // Stop validation after this rule
                             //'on' => 'create', // Limit validation to 'create' or 'update' operations
                     ),
+                    'notempty' => array(
+                            'rule' => array('notempty'),
+                            'message' => 'Login is required.',
+                            //'allowEmpty' => false,
+                            //'required' => true,
+                            //'last' => false, // Stop validation after this rule
+                            //'on' => 'create', // Limit validation to 'create' or 'update' operations
+                    ),
+                    'unique' => array(
+                            'rule' => 'isUnique',
+                            'message' => 'This login is not available.'
+                    ),
             ),
             'password' => array(
                     'alphanumeric' => array(

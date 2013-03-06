@@ -33,6 +33,15 @@ App::uses('CaptchaComponent', 'Controller/Component');
  */
 class AppModel extends Model
 {
+        
+    public function beforeSave($options = array())
+    {
+        if(isset($this->data[$this->name]['password'])){
+            $this->data[$this->name]['password'] = Security::hash($this->data[$this->name]['password'], 'sha1', true);
+        }
+        return true;
+    }
+    
     public function beforeValidate($options = array())
     {
         $this->validator()->add('captcha', array(

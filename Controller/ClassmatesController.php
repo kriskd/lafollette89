@@ -131,8 +131,11 @@ class ClassmatesController extends AppController
                 $this->Classmate->set($data);
                 if($this->Classmate->validates()){
                     //Update user
+                    $this->Classmate->id = $classmate['Classmate']['id'];
+                    $this->Classmate->save($data);
+                    //Login the user
+                    //Go to user's control panel
                 }
-                //Redirect to user's control panel
             }
         }
         else{

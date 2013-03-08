@@ -1,11 +1,37 @@
 <?php
 App::uses('AppController', 'Controller');
 App::uses('CaptchaComponent', 'Controller/Component');
+App::uses('AuthComponent', 'Controller/Component');
 
 class ClassmatesController extends AppController
 {
-    public $components = array('Captcha');
+    public $components =    array(
+                                'Captcha',
+                                'Auth' => array(
+                                    'authenticate' => array(
+                                        'Form' => array(
+                                            'userModel' => 'Classmate',
+                                            'fields' => array(
+                                                'username' => 'login',
+                                            ),
+                                        ),
+                                    ),
+                                    'loginAction' => array(
+                                        'controller' => 'classmates',
+                                        'action' => 'login'
+                                    ),
+                                    'loginRedirect' => array(
+                                        'controller' => 'classmates',
+                                        'action' => 'edit'
+                                    ),  
+                                ),
+                            );
     
+    public function beforeFilter()
+    {
+        $this->Auth->allow();
+        $this->Auth->deny('edit');
+    }
     /**
      * Display a list of classmates to send emails to.
      */
@@ -141,5 +167,27 @@ class ClassmatesController extends AppController
         else{
             $this->redirect(array('action' => 'email'));
         }
+    }
+    
+    public function edit($id = null)
+    {
+        
+    }
+    
+    public function login()
+    {
+        if($this->request->is('post') || $this->request->is('put')){
+            $data = $this->Auth->request->data;
+            $password = $data['Classmate']['password'];
+            if($this->Auth->login()){
+                return $this->redirect($this->Auth->redirectUrl());
+            }
+            $this->Session->setFlash('Username or password is incorrect.');
+        }
+    }
+    
+    public function logout()
+    {
+        $this->redirect($this->Auth->logout());
     }
 }

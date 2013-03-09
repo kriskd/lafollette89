@@ -1,6 +1,7 @@
 @body: #c0c0c0;
 @header: #640E27;
 @content: #a5a5a5;
+@dark-maroon: #490102;
 
 html, body {
     margin: 0;
@@ -8,6 +9,7 @@ html, body {
 }
 body {
     background: @body;
+    font: 75% Arial,Helvetica,sans-serif;
 }
 
 #header {
@@ -30,4 +32,55 @@ body {
 .col1, .col2, .col3 {
     width: 33%;
     float: left;
+}
+h1, h2, h3, h4, h5, h6 {
+color: @dark-maroon;
+}
+h1 {
+text-align: center;
+}
+h2 {
+border-bottom: 1px solid @dark-maroon;
+}
+h3 {
+    margin-top: 0;
+}
+p {
+    line-height: 1.4;
+}
+a:link, a:visited, a:hover {
+    color: @dark-maroon;
+}
+label {
+    font-weight: bold;
+    display: block;
+    margin-top: 1em; 
+}
+.checkbox {
+    line-height: 1.4;
+    label {
+        font-weight: normal;
+        display: inline;
+        margin-top: auto;
+    }
+}
+
+.wrapper {
+    overflow: hidden;
+}
+.contentleft, .contentright {
+    float: left;
+    width: 50%;
+}
+#footer {
+    background: #a5a5a5 url(/img/footer-back.png) repeat-x;
+    height: 74px;
+    font-family:Tahoma,Arial,Helvetica,sans-serif;
+    text-align: center;
+    padding-top: 20px;
+    color: @dark-maroon;
+    font-weight: bold;
+    p {
+        margin-top: 20px;
+    }
 }

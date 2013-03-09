@@ -34,13 +34,13 @@ body {
     float: left;
 }
 h1, h2, h3, h4, h5, h6 {
-color: @dark-maroon;
+    color: @dark-maroon;
 }
 h1 {
-text-align: center;
+    text-align: center;
 }
 h2 {
-border-bottom: 1px solid @dark-maroon;
+    border-bottom: 1px solid @dark-maroon;
 }
 h3 {
     margin-top: 0;
@@ -64,7 +64,20 @@ label {
         margin-top: auto;
     }
 }
-
+fieldset {
+    border: none;
+    font-weight: bold;
+    label {
+        margin: auto 2em auto auto;
+        float: left;
+    }
+    input {
+        margin-top: auto;
+    }
+}
+input[type=radio] {
+    float: left;
+}
 .wrapper {
     overflow: hidden;
 }

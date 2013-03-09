@@ -66,6 +66,20 @@ label {
   display: inline;
   margin-top: auto;
 }
+fieldset {
+  border: none;
+  font-weight: bold;
+}
+fieldset label {
+  margin: auto 2em auto auto;
+  float: left;
+}
+fieldset input {
+  margin-top: auto;
+}
+input[type=radio] {
+  float: left;
+}
 .wrapper {
   overflow: hidden;
 }

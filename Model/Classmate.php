@@ -222,7 +222,19 @@ class Classmate extends AppModel {
     
     public function pwMatch($check)
     {   
-        $password2 = $this->data['Classmate']['password2']; //var_dump($password == $check['password2']);
+        $password2 = $this->data['Classmate']['password2']; 
         return $password2 == $check['password'] ? true : false;
+    }
+    
+    /**
+     * Strip password hash from returned data.
+     */
+    public function afterFind($results, $primary = false)
+    {
+        $strip_password = array_map(function($item){
+            unset($item['Classmate']['password']);
+            return $item;}, $results);
+        
+        return $strip_password;
     }
 }

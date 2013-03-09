@@ -7,6 +7,24 @@ body {
   background: #c0c0c0;
   font: 75% Arial,Helvetica,sans-serif;
 }
+h1, h2, h3, h4, h5, h6 {
+color: #490102;
+}
+h1 {
+text-align: center;
+}
+h2 {
+border-bottom: 1px solid #490102;
+}
+h3 {
+    margin-top: 0;
+}
+p {
+    line-height: 1.4;
+}
+a:link, a:visited, a:hover {
+color: #490102;
+}
 label {
   font-weight: bold;
   display: block;
@@ -40,4 +58,23 @@ label {
 .col3 {
   width: 33%;
   float: left;
+}
+.wrapper {
+    overflow: hidden;
+}
+.contentleft, .contentright {
+float: left;
+width: 50%;
+}
+#footer {
+background: #a5a5a5 url(/img/footer-back.png) repeat-x;
+height: 74px;
+font-family:Tahoma,Arial,Helvetica,sans-serif;
+text-align: center;
+padding-top: 20px;
+color: #490102;
+font-weight: bold;
+}
+#footer p {
+margin-top: 20px;
 }

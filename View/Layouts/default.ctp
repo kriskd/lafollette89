@@ -32,12 +32,7 @@
 			<?php echo $this->fetch('content'); ?>
 		</div>
 		<div id="footer">
-			<?php echo $this->Html->link(
-					$this->Html->image('cake.power.gif', array('border' => '0')),
-					'http://www.cakephp.org/',
-					array('target' => '_blank', 'escape' => false)
-				);
-			?>
+			<p>DESIGNED AND MAINTAINED BY KRIS (SHAWKEY) DOCKTER</p>
 		</div>
 	</div>
 	<?php echo $this->element('sql_dump'); ?>

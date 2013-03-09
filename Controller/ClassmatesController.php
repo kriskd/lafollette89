@@ -169,9 +169,23 @@ class ClassmatesController extends AppController
         }
     }
     
-    public function edit($id = null)
+    public function edit()
     {
+        if($this->request->is('post') || $this->request->is('put')){
+            if($this->Classmate->save($this->request->data)){
+                $this->Session->setFlash('Profile saved.');
+            }
+            else{
+                $this->Session->setFlash('Unable to save.');
+            }
+        }
         
+        $id = $this->Auth->user('id');
+        if(!$classmate = $this->Classmate->find('first', array('conditions' => compact('id')))){
+            $this->redirect(array('action' => 'index'));
+        }
+        
+        $this->request->data = $classmate;
     }
     
     public function login()

@@ -1,5 +1,6 @@
 <?php
 App::uses('AppModel', 'Model');
+App::uses('AuthComponent', 'Controller/Component');
 /**
  * Classmate Model
  *
@@ -165,14 +166,6 @@ class Classmate extends AppModel {
                     ),
             ),
             'password' => array(
-                    'alphanumeric' => array(
-                            'rule' => array('alphanumeric'),
-                            //'message' => 'Your custom message here',
-                            //'allowEmpty' => false,
-                            //'required' => false,
-                            //'last' => false, // Stop validation after this rule
-                            //'on' => 'create', // Limit validation to 'create' or 'update' operations
-                    ),
                     'notempty' => array(
                             'rule' => array('notEmpty'),
                     ),
@@ -207,15 +200,18 @@ class Classmate extends AppModel {
                     ),  
                 )
             )
+            ->add('passwordNew', array(
+                    'match' => array(
+                        'rule' => array('pwMatch'),
+                        'message' => 'Passwords do not match.'
+                    ),
+                )
+            )
             ->add('password2', array(
                 'notEmpty' => array(
                     'rule' => 'notEmpty',
                     'message' => 'Please confirm your password.'
                 ),
-                /*'match' => array(
-                    'rule' => array('pwMatch'),
-                    'message' => 'Passwords do not match.'
-                ),*/
             )
         );
     }
@@ -226,15 +222,30 @@ class Classmate extends AppModel {
         return $password2 == $check['password'] ? true : false;
     }
     
-    /**
-     * Strip password hash from returned data.
-     */
-    public function afterFind($results, $primary = false)
+    public function addVerifyPassword()
     {
-        $strip_password = array_map(function($item){
-            unset($item['Classmate']['password']);
-            return $item;}, $results);
-        
-        return $strip_password;
+        $this->validator()
+            ->add('password', array(
+                    'verify' => array(
+                        'rule' => array('pwVerify'),
+                        'message' => 'Password mismatch, try again.'
+                    ),  
+                )
+            );
+            
+    }
+    
+    public function pwVerify($check)
+    {
+        $password = $check['password']; 
+        $hash = AuthComponent::password($password); 
+        $id = AuthComponent::user('id');
+        $user_pw_hash = Classmate::find('list', array('conditions' => compact('id'),
+                                                        'fields' => array('password')
+                                                        )
+                                        );
+        $user_pw_hash = array_shift($user_pw_hash);
+
+        return strcasecmp($hash, $user_pw_hash)==0 ? true : false;
     }
 }

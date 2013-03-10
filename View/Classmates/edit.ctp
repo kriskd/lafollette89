@@ -11,7 +11,7 @@
             <h2>Email</h2>
             <?php echo $this->Form->input('email'); ?>
             <h2>Password</h2>
-            <?php echo $this->Form->input('password', array('label' => 'New Password:')); ?>
+            <?php echo $this->Form->input('passwordNew', array('label' => 'New Password:', 'type' => 'password')); ?>
             <?php echo $this->Form->input('password2', array('label' => 'Re-Enter New Password:', 'type' => 'password')); ?>
         </div>
     </div>

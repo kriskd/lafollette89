@@ -88,6 +88,9 @@ input[type=radio] {
   float: left;
   width: 50%;
 }
+.required input {
+  border: 2px solid red;
+}
 #footer {
   background: #a5a5a5 url(/img/footer-back.png) repeat-x;
   height: 74px;

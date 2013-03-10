@@ -1,5 +1,6 @@
 <div class="classmates form">
 <?php echo $this->Form->create('Classmate'); ?>
+    <?php echo $this->Form->hidden('id'); ?>
     <div class="wrapper">
         <div class="contentleft">
             <h2>Name</h2>

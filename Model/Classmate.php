@@ -248,4 +248,30 @@ class Classmate extends AppModel {
 
         return strcasecmp($hash, $user_pw_hash)==0 ? true : false;
     }
+    
+    public function addUniqueEmail()
+    {
+        $this->validator()->remove('email', 'unique');
+        $this->validator()
+            ->add('email', array(
+                    'uniqueEmail' => array(
+                        'rule' => array('uniqueEmail'),
+                        'message' => 'This email is taken, choose another.'
+                    )
+                )
+            );
+    }
+    
+    public function uniqueEmail($check)
+    {
+        $user_id = $this->find('first', array('conditions' => array('email' => $check['email']),
+                                                                'fields' => array('id')));
+        $user_id = $user_id['Classmate']['id'];
+        
+        if(empty($user_id)) return true;
+        
+        if(AuthComponent::user('id') == $user_id) return true;
+        
+        return false;
+    }
 }

@@ -241,11 +241,6 @@ class Classmate extends AppModel {
             
     }
     
-    public function removeVerifyPassword()
-    {
-        $this->validator()->remove('password', 'verify');
-    }
-    
     public function pwVerify($check)
     {   
         $password = $check['password']; 

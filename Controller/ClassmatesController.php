@@ -172,14 +172,26 @@ class ClassmatesController extends AppController
     public function edit()
     {
         if($this->request->is('post') || $this->request->is('put')){
-            $data = $this->request->data;
+            $data = $this->request->data; 
+            $this->Classmate->addUniqueEmail();
             $this->Classmate->addVerifyPassword();
-            $this->Classmate->addUniqueEmail(); 
-            if($this->Classmate->save($this->request->data)){
-                $this->Session->setFlash('Profile saved.');
-            }
-            else{
-                $this->Session->setFlash('Unable to save.');
+            $this->Classmate->addPasswordChange();
+            $this->Classmate->set($data);
+            if($this->Classmate->validates()){ 
+                if(!empty($data['Classmate']['passwordNew'])){
+                    //Password gets hashed in beforeSave callback
+                    $data['Classmate']['password'] = $data['Classmate']['passwordNew'];
+                }
+                //On save validation rules are run again and addVerifyPassword
+                //fails if the user has changed the pw. Turn it off since we
+                //already validated it.
+                $this->Classmate->removeVerifyPassword();
+                if($this->Classmate->save($data)){
+                    $this->Session->setFlash('Profile saved.');
+                }
+                else{
+                    $this->Session->setFlash('Unable to save.');
+                }
             }
         }
 
@@ -191,7 +203,7 @@ class ClassmatesController extends AppController
             $this->redirect(array('action' => 'index'));
         }
         
-        $this->request->data = $classmate;
+        $this->request->data = $classmate; 
     }
     
     public function login()

@@ -183,10 +183,8 @@ class ClassmatesController extends AppController
                     $data['Classmate']['password'] = $data['Classmate']['passwordNew'];
                 }
                 //On save validation rules are run again and addVerifyPassword
-                //fails if the user has changed the pw. Turn it off since we
-                //already validated it.
-                $this->Classmate->removeVerifyPassword();
-                if($this->Classmate->save($data)){
+                //fails if the user has changed the pw. So turn off validation.
+                if($this->Classmate->save($data, false)){
                     $this->Session->setFlash('Profile saved.');
                 }
                 else{

@@ -67,7 +67,7 @@ class Classmate extends AppModel {
                     'alphaDash' => array(
                             'rule' => array('custom', '/^[a-zA-Z-]*$/'),
                             'message' => 'Enter a valid last name.',
-                            //'allowEmpty' => false,
+                            'allowEmpty' => true,
                             //'required' => false,
                             //'last' => false, // Stop validation after this rule
                             //'on' => 'create', // Limit validation to 'create' or 'update' operations
@@ -200,13 +200,6 @@ class Classmate extends AppModel {
                     ),  
                 )
             )
-            ->add('passwordNew', array(
-                    'match' => array(
-                        'rule' => array('pwMatch'),
-                        'message' => 'Passwords do not match.'
-                    ),
-                )
-            )
             ->add('password2', array(
                 'notEmpty' => array(
                     'rule' => 'notEmpty',
@@ -216,10 +209,23 @@ class Classmate extends AppModel {
         );
     }
     
-    public function pwMatch($check)
+    public function addPasswordChange()
+    {
+        $this->validator()
+            ->add('passwordNew', array(
+                'match' => array(
+                    'rule' => array('passwordMatch'),
+                    'message' => 'Passwords do not match.',
+                    'allowEmpty' => true,
+                ),
+            )
+        );
+    }
+    
+    public function passwordMatch($check)
     {   
         $password2 = $this->data['Classmate']['password2']; 
-        return $password2 == $check['password'] ? true : false;
+        return $password2 == current($check) ? true : false;
     }
     
     public function addVerifyPassword()
@@ -235,8 +241,13 @@ class Classmate extends AppModel {
             
     }
     
-    public function pwVerify($check)
+    public function removeVerifyPassword()
     {
+        $this->validator()->remove('password', 'verify');
+    }
+    
+    public function pwVerify($check)
+    {   
         $password = $check['password']; 
         $hash = AuthComponent::password($password); 
         $id = AuthComponent::user('id');
@@ -245,7 +256,7 @@ class Classmate extends AppModel {
                                                         )
                                         );
         $user_pw_hash = array_shift($user_pw_hash);
-
+        
         return strcasecmp($hash, $user_pw_hash)==0 ? true : false;
     }
     

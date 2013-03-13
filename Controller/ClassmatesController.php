@@ -4,7 +4,7 @@ App::uses('CaptchaComponent', 'Controller/Component');
 App::uses('AuthComponent', 'Controller/Component');
 
 class ClassmatesController extends AppController
-{
+{   
     public $components =    array(
                                 'Captcha',
                                 'Auth' => array(
@@ -30,14 +30,16 @@ class ClassmatesController extends AppController
     public function beforeFilter()
     {
         $this->Auth->allow();
-        $this->Auth->deny('edit');
+        $this->Auth->deny('edit', 'admin_index');
     }
     /**
      * Display a list of classmates to send emails to.
      */
     public function index()
     {
-        $classmates = $this->Classmate->find('all', array('order' => array('formerLastName', 'firstName')));
+        $classmates = $this->Classmate->find('all', array('order' => array('formerLastName', 'firstName'),
+                                                          'conditions' => array('display' => 1),
+                                                          'fields' => array('id', 'currentLastName', 'formerLastName', 'firstName')));
         $count = count($classmates);
         $chunk = array_chunk($classmates, ceil($count/3));
         
@@ -207,10 +209,9 @@ class ClassmatesController extends AppController
     public function login()
     {
         if($this->request->is('post') || $this->request->is('put')){
-            $data = $this->Auth->request->data;
-            $password = $data['Classmate']['password'];
-            if($this->Auth->login()){
-                return $this->redirect($this->Auth->redirectUrl());
+            if($this->Auth->login()){ 
+                $redirect = $this->Auth->user('role') == 9 ? '/classmates/admin' : null;
+                return $this->redirect($this->Auth->redirectUrl($redirect));
             }
             $this->Session->setFlash('Username or password is incorrect.');
         }
@@ -219,5 +220,14 @@ class ClassmatesController extends AppController
     public function logout()
     {
         $this->redirect($this->Auth->logout());
+    }
+    
+    public function admin_index()
+    {
+        if($this->Auth->user('role') != 9){
+            $this->redirect(array('controller' => 'classmates', 'action' => 'index', 'admin' => false));
+        }
+        $classmates = $this->Classmate->find('all');
+        $this->set(compact('classmates'));
     }
 }

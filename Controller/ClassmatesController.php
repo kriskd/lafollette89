@@ -227,7 +227,11 @@ class ClassmatesController extends AppController
         if($this->Auth->user('role') != 9){
             $this->redirect(array('controller' => 'classmates', 'action' => 'index', 'admin' => false));
         }
-        $classmates = $this->Classmate->find('all');
+        $classmates_not_displayed = $this->Classmate->find('all', array('conditions' => array('display' => 0),
+                                                                        'order' => array('formerLastName', 'firstName')));
+        $classmates_displayed = $this->Classmate->find('all', array('conditions' => array('display !=' => 0),
+                                                          'order' => array('formerLastName', 'firstName')));
+        $classmates = array_merge($classmates_not_displayed, $classmates_displayed);
         $this->set(compact('classmates'));
     }
 }

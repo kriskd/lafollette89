@@ -5,30 +5,9 @@ App::uses('AuthComponent', 'Controller/Component');
 
 class ClassmatesController extends AppController
 {   
-    public $components =    array(
-                                'Captcha',
-                                'Auth' => array(
-                                    'authenticate' => array(
-                                        'Form' => array(
-                                            'userModel' => 'Classmate',
-                                            'fields' => array(
-                                                'username' => 'login',
-                                            ),
-                                        ),
-                                    ),
-                                    'loginAction' => array(
-                                        'controller' => 'classmates',
-                                        'action' => 'login'
-                                    ),
-                                    'loginRedirect' => array(
-                                        'controller' => 'classmates',
-                                        'action' => 'edit'
-                                    ),  
-                                ),
-                            );
-    
     public function beforeFilter()
     {
+        parent::beforeFilter();
         $this->Auth->allow();
         $this->Auth->deny('edit', 'admin_index');
     }
@@ -207,13 +186,18 @@ class ClassmatesController extends AppController
     }
     
     public function login()
-    {
+    {   
         if($this->request->is('post') || $this->request->is('put')){
-            if($this->Auth->login()){ 
-                $redirect = $this->Auth->user('role') == 9 ? '/classmates/admin' : null;
-                return $this->redirect($this->Auth->redirectUrl($redirect));
+            if(!$this->Auth->login()){ 
+                $this->Session->setFlash('Username or password is incorrect.');
+                return; 
             }
-            $this->Session->setFlash('Username or password is incorrect.');
+        }
+        
+        $redirect = $this->Auth->user('role') == 9 ? '/admin/classmates' : null;
+        
+        if($this->Auth->loggedIn() == true){ 
+            return $this->redirect($this->Auth->redirectUrl($redirect));
         }
     }
     
@@ -223,8 +207,8 @@ class ClassmatesController extends AppController
     }
     
     public function admin_index()
-    {
-        if($this->Auth->user('role') != 9){
+    {   
+        if($this->Auth->user('role') != 9){ 
             $this->redirect(array('controller' => 'classmates', 'action' => 'index', 'admin' => false));
         }
         $classmates_not_displayed = $this->Classmate->find('all', array('conditions' => array('display' => 0),

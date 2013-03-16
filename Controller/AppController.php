@@ -31,7 +31,31 @@ App::uses('Controller', 'Controller');
  * @package       app.Controller
  * @link http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
  */
-class AppController extends Controller {
+class AppController extends Controller
+{
+    public $components =    array(
+                            'Captcha',
+                            'Session',
+                            'Auth' => array(
+                                'authenticate' => array(
+                                    'Form' => array(
+                                        'userModel' => 'Classmate',
+                                        'fields' => array(
+                                            'username' => 'login',
+                                        ),
+                                    ),
+                                ),
+                                'loginAction' => array(
+                                    'controller' => 'classmates',
+                                    'action' => 'login'
+                                ),
+                                'loginRedirect' => array(
+                                    'controller' => 'classmates',
+                                    'action' => 'edit'
+                                ),  
+                            ),
+                        );
+        
     public function beforeRender()
     {
         if(Configure::read('debug') > 0){
@@ -42,5 +66,12 @@ class AppController extends Controller {
             $lessc->checkedCompile($less,$css);
         }
         parent::beforeRender();
+    }
+    
+    public function beforeFilter()
+    {
+        if(strcasecmp($this->request->params['controller'], 'admin')==0 && $this->Auth->user('role') != 9){ 
+            $this->redirect(array('controller' => 'classmates', 'action' => 'index', 'admin' => false));
+        }
     }
 }

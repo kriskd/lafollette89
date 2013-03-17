@@ -58,6 +58,18 @@ label {
   display: block;
   margin-top: 1em;
 }
+#menu {
+  text-align: center;
+}
+#menu ul li {
+  display: inline;
+  list-style: none;
+  padding: 0 1em;
+  font-weight: bold;
+}
+#menu ul li a:hover {
+  text-decoration: none;
+}
 .checkbox {
   line-height: 1.4;
 }

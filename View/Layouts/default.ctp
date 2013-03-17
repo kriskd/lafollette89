@@ -30,8 +30,8 @@
 				<ul>
                     <li><?php echo $this->Html->link('Home', array('controller' => 'classmates', 'action' => 'index', 'admin' => false)); ?></li>
                     <?php if($logged_in == false): ?>
-                        <li><?php echo $this->Html->link('Classmate Login', array('controller' => 'classmates', 'action' => 'login')); ?></li>
-                        <li><?php echo $this->Html->link('Create Login', array('controller' => 'classmates', 'action' => 'email')); ?></li>
+                        <li><?php echo $this->Html->link('Classmate Login', array('controller' => 'classmates', 'action' => 'login', 'admin' => false)); ?></li>
+                        <li><?php echo $this->Html->link('Create Login', array('controller' => 'classmates', 'action' => 'email', 'admin' => false)); ?></li>
                     <?php endif; ?>
                     <?php if(isset($has_login)): ?>
                         <li><?php echo $this->Html->link('Profile', array('controller' => 'classmates', 'action' => 'edit', 'admin' => false)); ?></li>

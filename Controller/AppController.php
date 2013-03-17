@@ -47,11 +47,13 @@ class AppController extends Controller
                                 ),
                                 'loginAction' => array(
                                     'controller' => 'classmates',
-                                    'action' => 'login'
+                                    'action' => 'login',
+                                    'admin' => false
                                 ),
                                 'loginRedirect' => array(
                                     'controller' => 'classmates',
-                                    'action' => 'edit'
+                                    'action' => 'edit',
+                                    'admin' => false
                                 ),  
                             ),
                         );
@@ -69,18 +71,22 @@ class AppController extends Controller
     }
     
     public function beforeFilter()
-    {   
-        $prefix = isset($this->request->params['prefix']) ? $this->request->params['prefix'] : null;
-        $controller = isset($this->request->params['controller']) ? $this->request->params['controller'] : null;
-        
-        if(((strcasecmp($prefix, 'admin')==0) || (strcasecmp($controller, 'admin')==0)) && $this->Auth->user('role') != 9){ 
-            $this->redirect(array('controller' => 'classmates', 'action' => 'index', 'admin' => false));
-        }
-        
+    {
         //Some variables needed in the view
         $has_login = $this->Auth->user('login');
         $role = $this->Auth->user('role');
         $logged_in = $this->Auth->loggedIn();
         $this->set(compact('has_login', 'role', 'logged_in'));
+    }
+    
+    public function isAuthorized($user = null)
+    {
+        if(empty($this->request->params['admin'])) return true;
+        
+        if(isset($this->request->params['admin'])){
+            return (bool)($user['role'] == 9);
+        }
+        
+        return false;
     }
 }

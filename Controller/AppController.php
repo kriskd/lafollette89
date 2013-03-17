@@ -69,9 +69,18 @@ class AppController extends Controller
     }
     
     public function beforeFilter()
-    {
-        if(strcasecmp($this->request->params['controller'], 'admin')==0 && $this->Auth->user('role') != 9){ 
+    {   
+        $prefix = isset($this->request->params['prefix']) ? $this->request->params['prefix'] : null;
+        $controller = isset($this->request->params['controller']) ? $this->request->params['controller'] : null;
+        
+        if(((strcasecmp($prefix, 'admin')==0) || (strcasecmp($controller, 'admin')==0)) && $this->Auth->user('role') != 9){ 
             $this->redirect(array('controller' => 'classmates', 'action' => 'index', 'admin' => false));
         }
+        
+        //Some variables needed in the view
+        $has_login = $this->Auth->user('login');
+        $role = $this->Auth->user('role');
+        $logged_in = $this->Auth->loggedIn();
+        $this->set(compact('has_login', 'role', 'logged_in'));
     }
 }

@@ -197,7 +197,7 @@ class ClassmatesController extends AppController
         $redirect = $this->Auth->user('role') == 9 ? '/admin/classmates' : null;
         
         if($this->Auth->loggedIn() == true){ 
-            return $this->redirect($this->Auth->redirectUrl($redirect));
+            $this->redirect($this->Auth->redirectUrl($redirect));
         }
     }
     

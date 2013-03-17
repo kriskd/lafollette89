@@ -103,20 +103,30 @@ class ClassmatesController extends AppController
      * Get the user object for the user email
      */
     public function email()
-    {   
+    {
+        //If user is logged in there is no need to be on this page
+        if($this->Auth->loggedIn() == true){
+            $this->redirect(array('action' => 'index', 'admin' => false));   
+        }
+        
         if($this->request->is('post') || $this->request->is('put')){
             $data = $this->request->data;
             $email = $data['Classmate']['email']; 
             if($classmate = $this->Classmate->find('first', array('conditions' => array(
                                                             'email' => $email,
                                                         )))){
+                //Check if user is not displayed yet.
+                if($classmate['Classmate']['display'] == 0){
+                    $this->Session->setFlash('Your account is still on hold pending verification of your e-mail.  To speed up this process, send an email to kris@lafollette89.com.');
+                    return;
+                }
                 if($classmate['Classmate']['login'] == null){  
                     $this->Session->write(compact('classmate'));
                     $this->redirect(array('action' => 'create'));
                 }
                 else{
                     $this->Session->SetFlash('This email already has an account associated with it.');
-                    //redirect to login
+                    $this->redirect(array('action' => 'login'));
                 }
             }
             else{
@@ -130,23 +140,22 @@ class ClassmatesController extends AppController
      */
     public function create()
     {
-        $classmate = $this->Session->read('classmate'); 
-        if(isset($classmate)){
-            if($this->request->is('post') || $this->request->is('put')){
-                $data = $this->request->data;
-                $this->Classmate->addPwValidator();
-                $this->Classmate->set($data);
-                if($this->Classmate->validates()){
-                    //Update user
-                    $this->Classmate->id = $classmate['Classmate']['id'];
-                    $this->Classmate->save($data);
-                    //Login the user
-                    //Go to user's control panel
-                }
-            }
-        }
-        else{
+        $classmate = $this->Session->read('classmate');
+        if(empty($classmate)){ 
             $this->redirect(array('action' => 'email'));
+        }
+        
+        if($this->request->is('post') || $this->request->is('put')){
+            $data = $this->request->data;
+            $this->Classmate->addPwValidator();
+            $this->Classmate->set($data);
+            if($this->Classmate->validates()){
+                //Update user
+                $this->Classmate->id = $classmate['Classmate']['id'];
+                $this->Classmate->save($data);
+                //Login the user
+                //Go to user's control panel
+            }
         }
     }
     

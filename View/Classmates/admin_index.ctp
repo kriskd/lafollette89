@@ -8,6 +8,7 @@
        <th>Role</th>
        <th>Comments</th>
     </tr>
+    <?php echo $this->Form->create('Classmate'); ?>
     <?php foreach($classmates as $classmate): ?>
         <tr>
             <td><?php echo $classmate['Classmate']['formerLastName']; ?></td>
@@ -21,4 +22,5 @@
             <td><?php echo $classmate['Classmate']['legitComments']; ?></td>
         </tr>
     <?php endforeach; ?>
+    <?php echo $this->Form->end(__('Submit')); ?>
 </table>

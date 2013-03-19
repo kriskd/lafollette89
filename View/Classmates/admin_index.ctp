@@ -15,8 +15,12 @@
         <tr>
             <td>
                 <?php if($classmate['Classmate']['display'] == 0): ?>
-                    <?php echo $this->Form->checkbox('Classmate.id', array('value' => $classmate['Classmate']['id'], 'hiddenField' => false)); ?></td>
+                    <?php echo $this->Form->select('Classmate.id',
+                                                   //This gives me an empty label tag, I'd rather have none
+                                                   array($classmate['Classmate']['id'] => null),
+                                                   array('multiple' => 'checkbox', 'hiddenField' => false)); ?>
                 <?php endif; ?>
+            </td>
             <td><?php echo $classmate['Classmate']['formerLastName']; ?></td>
             <td><?php echo $classmate['Classmate']['currentLastName']; ?></td>
             <td><?php echo $classmate['Classmate']['firstName']; ?></td>

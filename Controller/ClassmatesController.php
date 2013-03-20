@@ -154,7 +154,10 @@ class ClassmatesController extends AppController
                 $this->Classmate->id = $classmate['Classmate']['id'];
                 $this->Classmate->save($data);
                 //Login the user
+                //This needs to be tested
+                $this->Auth->login($this->Classmate);
                 //Go to user's control panel
+                $this->redirect(array('action' => 'edit'));
             }
         }
     }
@@ -220,6 +223,20 @@ class ClassmatesController extends AppController
         if($this->Auth->user('role') != 9){ 
             $this->redirect(array('controller' => 'classmates', 'action' => 'index', 'admin' => false));
         }
+        
+        if($this->request->is('post') || $this->request->is('put')){
+            $data = $this->request->data;
+            foreach($data as $model => $classmates){ 
+                foreach($classmates as $id => $classmate){
+                    if(isset($classmate['delete']) && $classmate['delete'] == 1){
+                        $this->Classmate->delete($id);
+                    }
+                    $save[][$model] = array_merge(compact('id'), $classmate);
+                } 
+            }
+            $this->Classmate->saveMany($save, array('validate' => false));
+        }
+        
         $classmates_not_displayed = $this->Classmate->find('all', array('conditions' => array('display' => 0),
                                                                         'order' => array('formerLastName', 'firstName')));
         $classmates_displayed = $this->Classmate->find('all', array('conditions' => array('display !=' => 0),

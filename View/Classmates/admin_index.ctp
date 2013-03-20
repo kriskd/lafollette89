@@ -24,7 +24,7 @@
             <td><?php echo $classmate['Classmate']['firstName']; ?></td>
             <td><?php echo $classmate['Classmate']['email']; ?></td>
             <td>
-                <?php echo $this->Form->select('Classmate.'.$id.'.display', array('No', 'Yes'), array('value' => $classmate['Classmate']['display'])); ?>
+                <?php echo $this->Form->select('Classmate.'.$id.'.display', array('No', 'Yes', 'Private'), array('value' => $classmate['Classmate']['display'])); ?>
             </td>
             <td>
                 <?php if(isset($classmate['Classmate']['login'])): ?>

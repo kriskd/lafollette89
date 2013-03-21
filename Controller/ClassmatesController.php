@@ -223,25 +223,44 @@ class ClassmatesController extends AppController
         if($this->Auth->user('role') != 9){ 
             $this->redirect(array('controller' => 'classmates', 'action' => 'index', 'admin' => false));
         }
+        $fields = array('id', 'firstName', 'currentLastName', 'formerLastName', 'email', 
+                        'legitComments', 'display', 'login', 'role');
+        
+        $classmates = $this->Classmate->find('all', array('conditions' => array('display' => 0),
+                                                'fields' => $fields));
         
         if($this->request->is('post') || $this->request->is('put')){
-            $data = $this->request->data;
-            foreach($data as $model => $classmates){ 
-                foreach($classmates as $id => $classmate){
+            $data = $this->request->data; 
+            foreach($data as $model => $items){ 
+                foreach($items as $id => $classmate){
                     if(isset($classmate['delete']) && $classmate['delete'] == 1){
                         $this->Classmate->delete($id);
+                        continue;
                     }
-                    $save[][$model] = array_merge(compact('id'), $classmate);
+                    $current_classmate = array_filter($classmates, function($item) use ($id) {return $item['Classmate']['id'] == $id;});
+                    $current_classmate = current($current_classmate);
+                    //Do this so only records that need to be updated are updated,
+                    //but it's not working right.
+                    if($current_classmate['Classmate']['display'] != $classmate['display'] ||
+                       (isset($classmate['role']) && $current_classmate['Classmate']['role'] != $classmate['role'])){
+                        $save[][$model] = array_merge(compact('id'), $classmate);
+                    }
                 } 
             }
-            $this->Classmate->saveMany($save, array('validate' => false));
+            if(isset($save)){
+                $this->Classmate->saveMany($save, array('validate' => false));
+            }
         }
         
+        //This is a mess.  Too many finds, too many queries, need to fix!
         $classmates_not_displayed = $this->Classmate->find('all', array('conditions' => array('display' => 0),
-                                                                        'order' => array('formerLastName', 'firstName')));
+                                                                        'order' => array('formerLastName', 'firstName'),
+                                                                        'fields' => $fields));
         $classmates_displayed = $this->Classmate->find('all', array('conditions' => array('display !=' => 0),
-                                                          'order' => array('formerLastName', 'firstName')));
+                                                          'order' => array('formerLastName', 'firstName'),
+                                                          'fields' => $fields));
         $classmates = array_merge($classmates_not_displayed, $classmates_displayed);
+        
         $this->set(compact('classmates'));
     }
 }

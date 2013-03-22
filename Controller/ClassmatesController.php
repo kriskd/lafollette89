@@ -226,8 +226,7 @@ class ClassmatesController extends AppController
         $fields = array('id', 'firstName', 'currentLastName', 'formerLastName', 'email', 
                         'legitComments', 'display', 'login', 'role');
         
-        $classmates = $this->Classmate->find('all', array('conditions' => array('display' => 0),
-                                                'fields' => $fields));
+        $classmates = $this->Classmate->find('all', array('fields' => $fields));
         
         if($this->request->is('post') || $this->request->is('put')){
             $data = $this->request->data; 
@@ -238,9 +237,9 @@ class ClassmatesController extends AppController
                         continue;
                     }
                     $current_classmate = array_filter($classmates, function($item) use ($id) {return $item['Classmate']['id'] == $id;});
-                    $current_classmate = current($current_classmate);
-                    //Do this so only records that need to be updated are updated,
-                    //but it's not working right.
+                    $current_classmate = current($current_classmate); 
+
+                    //Only save records that have changed
                     if($current_classmate['Classmate']['display'] != $classmate['display'] ||
                        (isset($classmate['role']) && $current_classmate['Classmate']['role'] != $classmate['role'])){
                         $save[][$model] = array_merge(compact('id'), $classmate);

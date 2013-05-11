@@ -54,7 +54,10 @@ class AppController extends Controller
                                     'controller' => 'classmates',
                                     'action' => 'edit',
                                     'admin' => false
-                                ),  
+                                ),
+                                'authorize' => array(
+                                    'Controller'
+                                ),
                             ),
                         );
         
@@ -80,7 +83,7 @@ class AppController extends Controller
     }
     
     public function isAuthorized($user = null)
-    {
+    {   
         if(empty($this->request->params['admin'])) return true;
         
         if(isset($this->request->params['admin'])){

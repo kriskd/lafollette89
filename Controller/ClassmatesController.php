@@ -220,9 +220,6 @@ class ClassmatesController extends AppController
     
     public function admin_index()
     {   
-        if($this->Auth->user('role') != 9){ 
-            $this->redirect(array('controller' => 'classmates', 'action' => 'index', 'admin' => false));
-        }
         $fields = array('id', 'firstName', 'currentLastName', 'formerLastName', 'email', 
                         'legitComments', 'display', 'login', 'role');
         
@@ -259,6 +256,9 @@ class ClassmatesController extends AppController
                                                           'order' => array('formerLastName', 'firstName'),
                                                           'fields' => $fields));
         $classmates = array_merge($classmates_not_displayed, $classmates_displayed);
+        
+        /*$classmates = $this->Classmate->find('all', array('order' => array('formerLastName', 'firstName'),
+                                                          'fields' => $fields));*/
         
         $this->set(compact('classmates'));
     }

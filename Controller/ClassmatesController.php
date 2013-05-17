@@ -50,7 +50,7 @@ class ClassmatesController extends AppController
     {
         $referer = $this->referer(null, true);
         $route = Router::url(array('controller' => 'classmates', 'action' => 'compose')); 
-        if(!empty($this->request->data) && strcasecmp($referer, $route)==0){
+        if(!empty($this->request->data) && strcasecmp($referer, $route)==0 && $this->request->onlyAllow('post')){
             $this->loadModel('SendEmail');
             $data = $this->request->data; 
             $this->SendEmail->set($data); 

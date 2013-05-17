@@ -1,0 +1,1 @@
+<p><?php echo $this->Html->link('Add content to ' . $slug, array('action' => 'add', $slug)); ?></p>

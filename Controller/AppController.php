@@ -36,6 +36,7 @@ class AppController extends Controller
     public $components =    array(
                             'Captcha',
                             'Session',
+                            'Security',
                             'Auth' => array(
                                 'authenticate' => array(
                                     'Form' => array(

@@ -72,4 +72,28 @@ class PagesController extends AppController {
 		$this->set(compact('page', 'subpage', 'title_for_layout'));
 		$this->render(implode('/', $path));
 	}
+	
+	public function admin_index()
+	{
+		$controllerClasses = App::objects('Controller');
+		foreach($controllerClasses as $controller){
+			if(strcasecmp($controller, 'AppController' != 0)){
+				App::uses($controller, 'Controller');
+				$actions = get_class_methods($controller);
+				$parentActions = get_class_methods('AppController');
+                $controllers[$controller] = array_diff($actions, $parentActions);
+			}
+		}
+		$this->set(compact('controllers'));
+	}
+	
+	public function admin_content($slug)
+	{
+		$this->set(compact('slug'));
+	}
+	
+	public function admin_add($slug)
+	{
+		$this->set(compact('slug'));
+	}
 }

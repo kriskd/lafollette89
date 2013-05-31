@@ -43,7 +43,7 @@ class PagesController extends AppController {
  *
  * @var array
  */
-	public $uses = array();
+	public $uses = array('Content');
 
 /**
  * Displays a view
@@ -72,6 +72,12 @@ class PagesController extends AppController {
 		$this->set(compact('page', 'subpage', 'title_for_layout'));
 		$this->render(implode('/', $path));
 	}
+    
+    public function beforeFilter()
+    {
+        parent::beforeFilter();
+        $this->Security->validatePost = false;
+    }
 	
 	public function admin_index()
 	{
@@ -87,13 +93,43 @@ class PagesController extends AppController {
 		$this->set(compact('controllers'));
 	}
 	
+    /**
+     * Edit page content.
+     */
 	public function admin_content($slug)
-	{
-		$this->set(compact('slug'));
+	{   
+        if(empty($slug)){
+            $this->redirect(array('controller' => 'pages', 'action' => 'index', 'admin' => true));
+        }
+        if($this->request->is('post') || $this->request->is('put')){ 
+            $this->_processContent();
+        }
+        $content = $this->Content->find('all', array('conditions' => array('slug' => $slug))); 
+		$this->set(compact('slug', 'content'));
 	}
 	
+    /**
+     * Add page content. Before data is saved it is formatted in the saveMany
+     * format so one method can handle both add and edit.
+     */
 	public function admin_add($slug)
 	{
+        if($this->request->is('post') || $this->request->is('put')){
+            $this->request->data['Content'] = array($this->request->data['Content']);
+            $this->_processContent();
+        }
 		$this->set(compact('slug'));
 	}
+    
+    protected function _processContent()
+    {
+        //For beforeSave to work, request data must be sent with 'Content' key
+        if($this->Content->saveMany($this->request->data['Content'])){ 
+            $this->Session->setFlash('Content saved');
+        }
+        else{
+            $this->Session->setFlash('Content not saved');
+        }
+        $this->redirect(array('controller' => 'pages', 'action' => 'index', 'admin' => true));
+    }
 }
